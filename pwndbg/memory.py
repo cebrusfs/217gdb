@@ -14,6 +14,7 @@ from builtins import bytes
 import gdb
 
 import pwndbg.arch
+import pwndbg.color
 import pwndbg.events
 import pwndbg.qemu
 import pwndbg.typeinfo
@@ -434,6 +435,17 @@ class Page(object):
                         'w' if flags & os.W_OK else '-',
                         'x' if flags & os.X_OK else '-',
                         'p'])
+
+    def color_str(self):
+        width = 2 + 2*pwndbg.typeinfo.ptrsize
+        fmt_string = "%#{}x %#{}x %s %8x %-6x %s"
+        fmt_string = fmt_string.format(width, width)
+        return fmt_string % (self.vaddr,
+                             self.vaddr+self.memsz,
+                             pwndbg.color.memory.get(self.vaddr, text=self.permstr),
+                             self.memsz,
+                             self.offset,
+                             self.objfile or '')
 
     def __str__(self):
         width = 2 + 2*pwndbg.typeinfo.ptrsize
