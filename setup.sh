@@ -116,4 +116,5 @@ ${PYTHON} -m pip install ${INSTALLFLAGS} -Ur requirements.txt
 # Load Pwndbg into GDB on every launch.
 if ! grep $PWD ~/.gdbinit &>/dev/null; then
     echo "source $PWD/gdbinit.py" >> ~/.gdbinit
+    echo "source $PWD/217color" >> ~/.gdbinit
 fi

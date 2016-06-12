@@ -1,0 +1,21 @@
+# memory color
+set memory-stack-color 'cyan'
+set memory-heap-color 'purple'
+set memory-data-color 'bold,blue'
+set memory-rodata-color 'green'
+
+# context
+#set banner-separator '─'
+set banner-color 'green'
+set context-clear-screen on
+
+# context-regs
+set context-register-changed-marker ''
+set context-register-changed-color 'bold,green'
+
+# nearpc:
+# do not append an empty line when contiguous branch, empty string will not display (default: ' ')
+set nearpc-branch-marker-contiguous ''
+
+# disasm
+set disasm-branch-color underline
