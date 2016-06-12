@@ -48,7 +48,7 @@ def prompt_hook_on_stop(*a):
 
 @pwndbg.config.Trigger([message.config_prompt_color, disable_colors])
 def set_prompt():
-    prompt = "pwndbg> "
+    prompt = "217gdb> "
 
     if not disable_colors:
         prompt = "\x02" + prompt + "\x01"  # STX + prompt + SOH
