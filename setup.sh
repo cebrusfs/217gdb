@@ -1,6 +1,8 @@
 #!/bin/bash
 set -ex
 
+# Use --user to force pip to install at local
+
 # If we are a root in a Docker container and `sudo` doesn't exist
 # lets overwrite it with a function that just executes things passed to sudo
 # (yeah it won't work for sudo executed with flags)
@@ -33,6 +35,7 @@ install_dnf() {
     sudo dnf -y debuginfo-install glibc
 }
 
+GDB=${GDB:-gdb}
 PYTHON=''
 INSTALLFLAGS=''
 
@@ -88,14 +91,14 @@ fi
 git submodule update --init --recursive
 
 # Find the Python version used by GDB.
-PYVER=$(gdb -batch -q --nx -ex 'pi import platform; print(".".join(platform.python_version_tuple()[:2]))')
-PYTHON+=$(gdb -batch -q --nx -ex 'pi import sys; print(sys.executable)')
+PYVER=$(${GDB} -batch -q --nx -ex 'pi import platform; print(".".join(platform.python_version_tuple()[:2]))')
+PYTHON+=$(${GDB} -batch -q --nx -ex 'pi import sys; print(sys.executable)')
 PYTHON+="${PYVER}"
 
 # Find the Python site-packages that we need to use so that
 # GDB can find the files once we've installed them.
 if linux && [ -z "$INSTALLFLAGS" ]; then
-    SITE_PACKAGES=$(gdb -batch -q --nx -ex 'pi import site; print(site.getsitepackages()[0])')
+    SITE_PACKAGES=$(${GDB} -batch -q --nx -ex 'pi import site; print(site.getsitepackages()[0])')
     INSTALLFLAGS="--target ${SITE_PACKAGES}"
 fi
 
@@ -111,6 +114,6 @@ ${PYTHON} -m pip install ${INSTALLFLAGS} --upgrade pip
 ${PYTHON} -m pip install ${INSTALLFLAGS} -Ur requirements.txt
 
 # Load Pwndbg into GDB on every launch.
-if ! grep pwndbg ~/.gdbinit &>/dev/null; then
+if ! grep $PWD ~/.gdbinit &>/dev/null; then
     echo "source $PWD/gdbinit.py" >> ~/.gdbinit
 fi
