@@ -48,12 +48,15 @@ def instruction(ins):
         sym    = pwndbg.symbol.get(ins.target) or None
         target = M.get(ins.target)
         const  = ins.target_const
-        hextarget = hex(ins.target)
+
+        # Use format string instead of hex() to avoid suffix 'l' or 'L'
+        hextarget = '0x%x' % ins.target
         hexlen    = len(hextarget)
 
         # If it's a constant expression, color it directly in the asm.
         if const:
-            asm = asm.replace(hex(ins.target), sym or target)
+            # TODO: Also colorize the address starts with '$' and '#'
+            asm = asm.replace(hextarget, sym or target)
 
             if sym:
                 asm = '%s <%s>' % (ljust_colored(asm, 36), target)
