@@ -1,3 +1,6 @@
+# reg
+set show-retaddr-reg on
+
 # memory color
 set memory-stack-color 'cyan'
 set memory-heap-color 'purple'
